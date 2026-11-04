@@ -152,7 +152,7 @@ task checkOverlap {
 	}
 
 	runtime {
-		docker: "us.gcr.io/broad-dsp-gcr-public/anvil-rstudio-bioconductor:3.17.0"
+		docker: "us-central1-docker.pkg.dev/all-of-us-rw-prod/aou-rw-gar-remote-repo-docker-prod/rocker/tidyverse:4.6.1"
 		memory: mem_gb + " GB"
 	}
 }
@@ -179,6 +179,6 @@ task concatenateFiles {
 	}
 
 	runtime{
-		 docker: "uwgac/pca_projection:0.2.0"
+		 docker: "us-central1-docker.pkg.dev/all-of-us-rw-prod/aou-rw-gar-remote-repo-docker-prod/uwgac/pca_projection:0.2.0"
 	}
 }

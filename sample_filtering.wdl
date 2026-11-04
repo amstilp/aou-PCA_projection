@@ -35,7 +35,7 @@ task removeRelateds {
     }
 
     runtime {
-        docker: "quay.io/biocontainers/plink2:2.00a5.12--h4ac6f70_0"
+        docker: "us-central1-docker.pkg.dev/all-of-us-rw-prod/aou-rw-gar-remote-repo-docker-prod/rtibiocloud/plink:v2.0.0-a.6.15_18fccba"
         disks: "local-disk " + disk_size + " SSD"
         memory: mem_gb + " GB"
     }
@@ -83,7 +83,7 @@ task king_ibdseg {
     }
 
     runtime {
-        docker: "uwgac/topmed-master:2.12.1"
+        docker: "us-central1-docker.pkg.dev/all-of-us-rw-prod/aou-rw-gar-remote-repo-docker-prod/uwgac/topmed-master:2.12.1"
         disks: "local-disk " + disk_size + " SSD"
         memory: mem_gb + " GB"
         cpu: n_cpus
@@ -123,7 +123,7 @@ task king_robust {
     }
 
     runtime {
-        docker: "uwgac/topmed-master:2.12.1"
+        docker: "us-central1-docker.pkg.dev/all-of-us-rw-prod/aou-rw-gar-remote-repo-docker-prod/uwgac/topmed-master:2.12.1"
         disks: "local-disk " + disk_size + " SSD"
         memory: mem_gb + " GB"
         cpu: n_cpus
@@ -169,7 +169,7 @@ task findRelated {
     }
 
     runtime {
-        docker: "uwgac/topmed-master:2.12.1"
+        docker: "us-central1-docker.pkg.dev/all-of-us-rw-prod/aou-rw-gar-remote-repo-docker-prod/uwgac/topmed-master:2.12.1"
         memory: mem_gb + " GB"
     }
 }
@@ -206,7 +206,7 @@ task removeSamples {
     }
 
     runtime {
-        docker: "quay.io/biocontainers/plink2:2.00a5.12--h4ac6f70_0"
+        docker: "us-central1-docker.pkg.dev/all-of-us-rw-prod/aou-rw-gar-remote-repo-docker-prod/rtibiocloud/plink:v2.0.0-a.6.15_18fccba"
         disks: "local-disk " + disk_size + " SSD"
         memory: mem_gb + " GB"
     }

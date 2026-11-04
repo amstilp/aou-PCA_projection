@@ -26,7 +26,7 @@ task make_pca_loadings {
 	>>>
 
 	runtime {
-		docker: "quay.io/biocontainers/plink2:2.00a5.10--h4ac6f70_0"
+		docker: "us-central1-docker.pkg.dev/all-of-us-rw-prod/aou-rw-gar-remote-repo-docker-prod/rtibiocloud/plink:v2.0.0-a.6.15_18fccba"
 		disks: "local-disk " + disk_size + " SSD"
 		memory: mem_gb + " GB"
 		cpu: n_cpus
@@ -34,7 +34,7 @@ task make_pca_loadings {
 
 	output {
 		File var_freq_counts = "~{basename}_snp_loadings.acount"
-		File snp_loadings = "~{basename}_snp_loadings.eigenvec.allele" 
+		File snp_loadings = "~{basename}_snp_loadings.eigenvec.allele"
 		File projection_log = "~{basename}_snp_loadings.log"
 	}
 }
@@ -71,7 +71,7 @@ task run_pca_projected {
 	>>>
 
 	runtime {
-		docker: "quay.io/biocontainers/plink2:2.00a5.10--h4ac6f70_0"
+		docker: "us-central1-docker.pkg.dev/all-of-us-rw-prod/aou-rw-gar-remote-repo-docker-prod/rtibiocloud/plink:v2.0.0-a.6.15_18fccba"
 		disks: "local-disk " + disk_size + " SSD"
 		memory: mem_gb + " GB"
 		cpu: n_cpus

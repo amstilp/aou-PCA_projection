@@ -21,7 +21,7 @@ task identifyColumns {
 	}
 
 	runtime {
-		docker: "us.gcr.io/broad-dsp-gcr-public/anvil-rstudio-bioconductor:3.17.0"
+		docker: "us-central1-docker.pkg.dev/all-of-us-rw-prod/aou-rw-gar-remote-repo-docker-prod/rocker/tidyverse:4.6.1"
 		disks: "local-disk " + disk_size + " SSD"
 	}
 }
@@ -41,7 +41,7 @@ task mergeFiles {
 
 	command <<<
 		set -e -o pipefail
-		
+
 		# merge plink files
 		cat ~{write_lines(bed)} | sed 's/\.bed$//' > bfile.txt
 		plink2 --pmerge-list bfile.txt bfile \
@@ -63,7 +63,7 @@ task mergeFiles {
 	}
 
 	runtime {
-		docker: "quay.io/biocontainers/plink2:2.00a5.12--h4ac6f70_0"
+		docker: "us-central1-docker.pkg.dev/all-of-us-rw-prod/aou-rw-gar-remote-repo-docker-prod/rtibiocloud/plink:v2.0.0-a.6.15_18fccba"
 		disks: "local-disk " + disk_size + " SSD"
 		memory: mem_gb + " GB"
 	}

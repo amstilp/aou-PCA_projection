@@ -10,10 +10,10 @@ workflow pca_plots {
     }
 
     call run_pca_plots {
-        input: data_file = data_file, 
-               groups_file = groups_file, 
+        input: data_file = data_file,
+               groups_file = groups_file,
                colormap = colormap,
-               n_pairs = n_pairs, 
+               n_pairs = n_pairs,
                mem_gb = mem_gb
     }
 
@@ -49,11 +49,11 @@ task run_pca_plots {
         File pca_plots_pc12 = "out_file_pc12.png"
         Array[File] pca_plots_pairs = glob("out_file_pairs_*.png")
         File pca_plots_parcoord = "out_file_parcoord.png"
-        File pca_plots = "pca_plots.html" 
+        File pca_plots = "pca_plots.html"
     }
 
     runtime{
-        docker: "uwgac/pca_projection:0.2.0"
+        docker: "us-central1-docker.pkg.dev/all-of-us-rw-prod/aou-rw-gar-remote-repo-docker-prod/uwgac/pca_projection:0.2.0"
         disks: "local-disk " + disk_size + " SSD"
         memory: mem_gb + " GB"
     }
