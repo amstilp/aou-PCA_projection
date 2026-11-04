@@ -8,6 +8,7 @@ task subsetVariants {
 		File? alt_allele_file
 		Float? min_maf
 		Float? missingness_filter
+		File? ld_exclude_file
 		Int genome_build = 38
 		Boolean snps_only = true
 		Boolean rm_dup = true
@@ -19,11 +20,10 @@ task subsetVariants {
 	String filename = basename(vcf)
 	String basename = if (sub(filename, ".bcf", "") != filename) then basename(filename, ".bcf") else basename(filename, ".vcf.gz")
 	String prefix = if (sub(filename, ".bcf", "") != filename) then "--bcf" else "--vcf"
+	File ld_exclude_file = if (defined(ld_exclude_file)) then ld_exclude_file else "https://raw.githubusercontent.com/GrindeLab/PCA/refs/heads/main/data/highLD/exclude_b~{genome_build}.txt"
 
 	command <<<
-		#get list of ranges to exclude
-		wget https://raw.githubusercontent.com/GrindeLab/PCA/refs/heads/main/data/highLD/exclude_b~{genome_build}.txt
-		cut -f 1,2,3 exclude_b~{genome_build}.txt > exclude.txt
+		cut -f 1,2,3 ~{ld_exclude_file} > exclude.txt
 
 		#subset file with --extract extract.txt
 		plink2 \
