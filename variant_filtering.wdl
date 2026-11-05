@@ -2,7 +2,9 @@ version 1.0
 
 task subsetVariants {
 	input {
-		File vcf
+		File plink_bed_file
+		File plink_bim_file
+		File plink_fam_file
 		Array[File] variant_files = []
 		File? sample_file
 		File? alt_allele_file
@@ -16,9 +18,9 @@ task subsetVariants {
 		Int mem_gb = 8
 	}
 
-	Int disk_size = ceil(2.5*(size(vcf, "GB") + size(variant_files, "GB"))) + 5
-	String filename = basename(vcf)
-	String basename = if (sub(filename, ".bcf", "") != filename) then basename(filename, ".bcf") else basename(filename, ".vcf.gz")
+	Int disk_size = ceil(2.5*(size(plink_bed_file, "GB") + size(plink_bim_file, "GB") + size(plink_fam_file, "GB") + size(variant_files, "GB"))) + 5
+	String filename = basename(plink_bed_file)
+	String basename = if (sub(filename, ".bed", "") != filename) then basename(filename, ".bed") else basename(filename, ".bim")
 	String prefix = if (sub(filename, ".bcf", "") != filename) then "--bcf" else "--vcf"
 	File ld_exclude_file = if (defined(ld_exclude_file)) then ld_exclude_file else "https://raw.githubusercontent.com/GrindeLab/PCA/refs/heads/main/data/highLD/exclude_b~{genome_build}.txt"
 
@@ -28,7 +30,9 @@ task subsetVariants {
 		#subset file with --extract extract.txt
 		plink2 \
 			--memory ~{mem_gb *  512} \
-			~{prefix} ~{vcf} \
+			--bed ~{plink_bed_file} \
+			--bim ~{plink_bim_file} \
+			--fam ~{plink_fam_file} \
 			~{"--maf " + min_maf} \
 			~{if length(variant_files) > 0 then "--extract-intersect " else ""} ~{sep=" " variant_files} \
 			~{"--keep " + sample_file} \

@@ -15,7 +15,7 @@ workflow projected_PCA {
 		File? variant_file
 		Float? missingness_filter
 		File? groups_file
-		Array[File] vcf
+		Array[Array[File]] plink_filesets
 		Int? genome_build
 		Float min_overlap = 0.95
 	}
@@ -26,10 +26,12 @@ workflow projected_PCA {
 			id_column = "SNP"
 	}
 
-	scatter (file in vcf) {
+	scatter (plink_fileset in plink_filesets) {
 		call variant_tasks.subsetVariants {
 			input:
-				vcf = file,
+				plink_bed_file = plink_fileset[0],
+				plink_bim_file = plink_fileset[1],
+				plink_fam_file = plink_fileset[2],
 				variant_files = select_all([identifyColumns.id_file, variant_file]),
 				sample_file = sample_file,
 				missingness_filter = missingness_filter,
@@ -37,7 +39,7 @@ workflow projected_PCA {
 		}
 	}
 
-	if (length(vcf) > 1) {
+	if (length(plink_filesets) > 1) {
 		call file_tasks.mergeFiles {
 			input:
 				bed = subsetVariants.subset_bed,
