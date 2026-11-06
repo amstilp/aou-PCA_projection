@@ -44,14 +44,21 @@ task split_sample_pc_file {
     }
 
     command <<<
-    mkdir ./output
+    echo "Processing ~{sample_pc_file}"
+    echo "Number of lines: $(wc -l ~{sample_pc_file})"
+
     header=$(head -n 1 "~{sample_pc_file}")
     export header
+    echo "Header: $header"
+
+    mkdir ./output
     tail -n +2 "~{sample_pc_file}" | \
         split -l "~{samples_per_batch}" \
         -d \
         --additional-suffix=.tsv \
         --filter='{ printf %s\\n "$header"; cat; } >./output/$FILE' - batch_
+
+    ls ./output
     >>>
 
     output {
