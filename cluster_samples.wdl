@@ -74,7 +74,6 @@ task cluster_samples {
     input {
         File sample_pc_file
         File cluster_means_file
-        File cluster_function_file = "https://raw.githubusercontent.com/UW-GAC/primed_example_notebooks/refs/heads/main/legacy_project/define_clusters.R"
         Int mem_gb = 8
     }
 
@@ -85,10 +84,26 @@ task cluster_samples {
         library(data.table)
         library(readr)
 
-        source("~{cluster_function_file}")
         cluster_centers <- read_tsv("~{cluster_means_file}")
         pcs <- fread("~{sample_pc_file}")
-        cluster_defs <- define_clusters(pcs, cluster_centers)
+
+        n_pcs <- ncol(cluster_centers)
+        sample_ids <- pcs[,2]
+        pcs <- pcs[,3:ncol(pcs)]
+        if (ncol(pcs) < n_pcs) stop(paste("only", ncol(pcs), "PCs in pcs but need", n_pcs, "to define clusters"))
+
+        n_samples <- nrow(pcs)
+        n_clusters <- nrow(cluster_centers)
+        cluster_distances <- matrix(nrow=n_samples, ncol=n_clusters,
+                                    dimnames=list(NULL, paste0("cluster", 1:n_clusters, "_dist")))
+        for (n in 1:n_samples) {
+            for (c in 1:n_clusters) {
+                cluster_distances[n,c] <- dist(rbind(cluster_centers[c,], pcs[n,]), method = "euclidean")
+            }
+        }
+        best_cluster <- apply(cluster_distances, 1, which.min)
+        cluster_defs <- cbind(sample_ids, best_cluster, cluster_distances)
+
         write_tsv(cluster_defs, "clusters.tsv")
 
         RSCRIPT
